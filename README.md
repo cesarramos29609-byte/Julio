@@ -18,7 +18,7 @@ MCP: Aislamiento del repositorio
 Marco regulatorio
 Defensa escalonada mediante auditoría autónoma de "agente verifica a agente". Contexto legal definido por Amparo Directo 6/2025 : Los resultados brutos de la IA son de dominio público; el análisis realizado por humanos permanece protegido.
 
-> Verificar: AUDIT_PROTOCOL_ACTIVE
+> Status: AUDIT_PROTOCOL_VERIFIED
 > Licencia: CC BY 4.0 / CC BY-SA 4.0 MX
 Cumplimiento clínico
 Experto: Julio César Argüello Pérez
@@ -38,3 +38,6 @@ T - Transparente
 H - Humanista
 O - Orquestado
 S - Soberano
+
+## Active Sessions
+- iOGeminis®-Google-OM-2873792737702321808
