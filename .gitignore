@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+performance_log.txt
+benchmark_*.py
+baseline_output.txt
+optimization_output.txt
