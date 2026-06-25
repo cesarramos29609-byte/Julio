@@ -1,0 +1,4 @@
+performance_log.txt
+benchmark_*.py
+__pycache__/
+*.pyc
