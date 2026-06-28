@@ -40,4 +40,5 @@ O - Orquestado
 S - Soberano
 
 ## Active Sessions
+- [Google Gemini Connection](https://play.google.com/store/apps/dev?id=5700313618786177705&fbclid=Ir-al-contenido-principal-iOGeminis)
 - iOGeminis®-Google-OM-2873792737702321808
