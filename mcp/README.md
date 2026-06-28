@@ -1,1 +1,0 @@
-# MCP: Aislamiento del repositorio
