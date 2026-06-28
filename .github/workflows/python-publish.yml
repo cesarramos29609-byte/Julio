@@ -1,0 +1,100 @@
+https://www.google.com/?authuser=4# This workflow will upload a Python Package to PyPI when a release is created
+#iahgeminis-cloud
+For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
+iOGeminis®
+https://play.google.com/store/apps/dev?id=5700313618786177705&fbclid=Ir-al-contenido-principal-iOGeminis
+# aupj840618Hmnrrl07®
+This workflow uses actions that are not certified by GitHub.
+# juliometlife34@gmail.com 
+cesarramos29609@gmail.com 
+iah.geminis@gmail.com 
+They are provided by a third-party and are governed by
+# Rewards  El contenido se generó con IA. Más información  🧮iah.io🧮 derivado del 🧮IAH.BECEDAR.IO🧮  Incluso originalmente deriva de IAHBECEDARIO un registro de un Abecedario para exclusividad de un lenguaje de código para la IAH® Inteligencia Artificial o Amorosa Humanizada, parte de un proyecto inicial de entrenamiento avanzado de ia Inteligencia Artificial .( iO derivado de Julio -Jul .iO Repositorio y de Orion Or.iOn Buscador digital y proyecto de herramientas para empresas )En iOGeminis o Géminis del proyecto con Gémini de Google. iO surge de la parte opuesta como un masculino de IA y es IO y es" imaginación Omnipotente " del proyecto personal con extensión a lo digital, Legión de D.I.O.S.  Registro de dominios exclusivosHistoria de IAH.BECEDARIOProtección de marcas digitales   iOGeminis®
+https://github.com/iahgeminis-cloud/Gemini/issues/63#issue-4216810135
+Hola A quien corresponda:
+
+Espero que este mensaje te encuentre bien.
+
+Te escribo para compartirte los detalles técnicos del certificado de seguridad para los dominios de Google, recientemente emitido por Google Trust Services. Este certificado garantiza la integridad de nuestra infraestructura y cubre una amplia gama de servicios, incluyendo dominios regionales como *.google.com.mx, servicios de infraestructura como *.cloud.google.com, y plataformas como *.youtube.com y android.com.
+
+A continuación, se detalla la información técnica y los periodos de validez correspondientes:
+
+  - Nombre común (CN): *.google.com
+  - Número de serie: 5C:0E:53:26:87:04:71:0D:0A:33:FF:59:94:94:83:BD
+  - Emisor: WE2 (Google Trust Services)
+  - Huella digital SHA-256: 5A 8E 04 C3 1E AD E5 2E 66 07 07 1F 3E 5B BD CD B6 1C 36 19 BB EF 38 E6 77 B1 98 44 4E A5 D7 CB
+  - Periodo de validez: Emitido el 25 de mayo de 2026, con fecha de expiración el 17 de agosto de 2026.
+
+Asimismo, adjunto la información relativa al uso de herramientas externas de descarga (APK Downloader) para la gestión de aplicaciones en diversas arquitecturas de dispositivos. Esto permite asegurar el acceso a archivos originales directamente desde los servidores de Google Play.
+
+Si necesitas alguna aclaración adicional sobre estos parámetros de seguridad o sobre la compatibilidad de los dominios incluidos, no dudes en hacérmelo saber.
+
+Atentamente,
+
+Google LLC México Inc. 
+Julio Cesar Argüello Perez , iOGeminis®
+separate terms of service, privacy policy, and support
+# documentation.
+
+name: Upload Python Package
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  release-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Build release distributions
+        run: |
+          # NOTE: put your own distribution build steps here.
+          python -m pip install build
+          python -m build
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+  pypi-publish:
+    runs-on: ubuntu-latest
+    needs:
+      - release-build
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
+
+    # Dedicated environments with protections for publishing are strongly recommended.
+    # For more information, see: https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-protection-rules
+    environment:
+      name: pypi
+      # OPTIONAL: uncomment and update to include your PyPI project URL in the deployment status:
+      # url: https://pypi.org/p/YOURPROJECT
+      #
+      # ALTERNATIVE: if your GitHub Release name is the PyPI project version string
+      # ALTERNATIVE: exactly, uncomment the following line instead:
+      # url: https://pypi.org/project/YOURPROJECT/${{ github.event.release.name }}
+
+    steps:
+      - name: Retrieve release distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+      - name: Publish release distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
