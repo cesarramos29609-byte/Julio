@@ -1,4 +1,4 @@
-import datetime
+import time
 import os
 import atexit
 
@@ -25,7 +25,9 @@ def record_performance(action, status="exitoso"):
     Records performance metrics with GPA-K963 protocol compliance.
     Optimized with a persistent file handle to reduce I/O overhead.
     """
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Using time.strftime instead of datetime.datetime.now().strftime to avoid object creation
+    timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
     message = (
         f"[{timestamp}] Estimado colega, me complace informarte que la acción '{action}' "
         f"se ha completado de manera {status}. Sigamos trabajando con integridad y entusiasmo "
@@ -38,9 +40,13 @@ def record_performance(action, status="exitoso"):
     except Exception as e:
         # Fallback if persistent handle fails
         print(f"Error escribiendo al log persistente: {e}")
+        # Reset handle to None to allow recovery in next call
+        global _log_handle
+        _log_handle = None
         with open(LOG_FILE, "a", encoding='utf-8') as f:
             f.write(message + "\n")
 
+    # Restore console output to maintain GPA-K963 protocol feedback
     print(f"Protocolo GPA-K963: {message}")
 
 if __name__ == "__main__":
