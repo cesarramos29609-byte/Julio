@@ -1,0 +1,74 @@
+Julio - Géminis 2026
+Copyright 2026 Julio César Argüello Pérez (iOGeminis)
+
+This product includes software developed by:
+- The Apache Software Foundation (https://www.apache.org/)
+- Google Cloud Platform and Gemini API (https://cloud.google.com/)
+- Google AI Studio (https://aistudio.google.com/)
+
+THIRD-PARTY LICENSES
+====================
+
+1. Apache Software Foundation
+   License: Apache License 2.0
+   URL: https://www.apache.org/
+   Used for: Core framework and utilities
+
+2. jsoup HTML Parser
+   License: MIT License
+   Copyright (c) 2009-2024 Jonathan Hedley
+   URL: https://jsoup.org/
+   Used for: HTML parsing and web content extraction
+
+3. Google Gemini API
+   License: Google Cloud Platform Terms of Service
+   URL: https://cloud.google.com/terms
+   Used for: Artificial intelligence and language model services
+
+COMPLIANCE NOTES
+================
+
+This software is provided "AS IS" under the Apache License 2.0. 
+All derivative works must comply with the license terms.
+
+Modifications and derivative works must:
+- Include a copy of this NOTICE file
+- Include a copy of the LICENSE file
+- Retain all copyright notices
+- Provide attribution to the original authors
+
+For the complete Apache 2.0 license text, see the LICENSE file in this repository.
+
+PROJECT STRUCTURE
+=================
+
+The Julio project is organized into four technical pillars:
+
+1. Google Flow (flow/)
+   - Orchestration of AI workflows
+   - Type: Workflow engine
+
+2. Antigravedad (antigravedad/)
+   - Agent layer implementation
+   - Type: AI agent framework
+
+3. NotebookLM (notebooklm/)
+   - Reasoning engine
+   - Type: Knowledge reasoning system
+
+4. MCP (mcp/)
+   - Repository isolation
+   - Type: Data abstraction layer
+
+SECURITY & COMPLIANCE
+=====================
+
+This project complies with:
+- Apache License 2.0 requirements
+- Google Cloud Platform Terms of Service
+- Mexican federal data protection laws (LFPDPPP)
+- Open source best practices
+
+For security reports, contact: soporte@iogeminis.app
+
+Last Updated: July 2026
