@@ -1,5 +1,6 @@
 import os
 import sys
+from performance import record_performance
 
 def check_pillars():
     pillars = ["flow", "antigravedad", "notebooklm", "mcp"]
@@ -22,6 +23,7 @@ def main():
         print(f"Verificación de Pilares: FAILED (Faltan: {', '.join(missing_pillars)})")
 
     if manifesto_ok and not missing_pillars:
+        record_performance("Verificación de Protocolos de Auditoría")
         print("\nSTATUS: AUDIT_PROTOCOL_ACTIVE")
         sys.exit(0)
     else:
