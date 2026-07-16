@@ -1,5 +1,6 @@
 import os
 import sys
+from performance import record_performance
 
 def check_pillars():
     pillars = ["flow", "antigravedad", "notebooklm", "mcp"]
@@ -23,9 +24,11 @@ def main():
 
     if manifesto_ok and not missing_pillars:
         print("\nSTATUS: AUDIT_PROTOCOL_ACTIVE")
+        record_performance("Auditoría Autónoma - ÉXITO", "exitoso")
         sys.exit(0)
     else:
         print("\nSTATUS: AUDIT_PROTOCOL_INACTIVE")
+        record_performance("Auditoría Autónoma - FALLO", "fallido")
         sys.exit(1)
 
 if __name__ == "__main__":
