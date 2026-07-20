@@ -1,3 +1,14 @@
+# Safe cross-directory import of performance module at load time (executed only once)
+try:
+    import sys
+    import os
+    _root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    if _root_dir not in sys.path:
+        sys.path.append(_root_dir)
+    from performance import record_performance
+except Exception:
+    record_performance = None
+
 class CircuitBreaker:
     """
     Implements the 'Cortacircuitos' logic as defined in Gemini 2026.
@@ -14,6 +25,12 @@ class CircuitBreaker:
     def record_failure(self):
         self.total_calls += 1
         self.failures += 1
+        # If failure threshold is exceeded, log autonomy reduction to satisfy integration requirements safely
+        if not self.is_autonomous_mode_safe() and record_performance is not None:
+            try:
+                record_performance("Reducción de autonomía por exceso de fallas en Cortacircuitos", "fallido")
+            except Exception:
+                pass
 
     @property
     def failure_rate(self):
