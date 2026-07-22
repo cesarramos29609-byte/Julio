@@ -1,3 +1,14 @@
+import os
+import sys
+
+# Perform imports and filesystem path resolution once at module load time to
+# avoid performance degradation on high-frequency callback paths.
+try:
+    from performance import record_performance
+except ImportError:
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+    from performance import record_performance
+
 class CircuitBreaker:
     """
     Implements the 'Cortacircuitos' logic as defined in Gemini 2026.
@@ -14,6 +25,9 @@ class CircuitBreaker:
     def record_failure(self):
         self.total_calls += 1
         self.failures += 1
+        # Fulfill integration requirements safely without impacting core system check performance
+        if self.failure_rate > self.threshold:
+            record_performance("Fallas del sistema superan el umbral", status="fallido")
 
     @property
     def failure_rate(self):
