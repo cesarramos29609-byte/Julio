@@ -1,5 +1,6 @@
 import time
 import random
+from performance import record_performance
 
 class CircuitBreaker:
     def __init__(self, failure_threshold=0.03):
@@ -18,6 +19,8 @@ class CircuitBreaker:
             print(f"ALERTA: Tasa de fallos ({failure_rate:.2%}) supera el umbral ({self.failure_threshold:.2%}).")
             print("Activando Cortacircuitos: Reduciendo rendimiento para garantizar soberanía.")
             self.performance_factor = max(0.1, 1.0 - (failure_rate * 5))
+            # Fulfill integration requirements safely without impacting core system check performance
+            record_performance("Fallas del sistema superan el umbral del Cortacircuitos", status="fallido")
             time.sleep(1.0 / self.performance_factor)
         else:
             self.performance_factor = 1.0
