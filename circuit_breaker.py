@@ -1,5 +1,14 @@
 import time
 import random
+import sys
+import os
+
+# Import record_performance at module load time to avoid performance degradation in hot paths
+try:
+    from performance import record_performance
+except ImportError:
+    sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+    from performance import record_performance
 
 class CircuitBreaker:
     def __init__(self, failure_threshold=0.03):
@@ -18,6 +27,11 @@ class CircuitBreaker:
             print(f"ALERTA: Tasa de fallos ({failure_rate:.2%}) supera el umbral ({self.failure_threshold:.2%}).")
             print("Activando Cortacircuitos: Reduciendo rendimiento para garantizar soberanía.")
             self.performance_factor = max(0.1, 1.0 - (failure_rate * 5))
+            # Integrated call when failure threshold is exceeded
+            record_performance(
+                f"Tasa de fallos ({failure_rate:.2%}) supera el umbral de cortacircuitos ({self.failure_threshold:.2%})",
+                status="fallido"
+            )
             time.sleep(1.0 / self.performance_factor)
         else:
             self.performance_factor = 1.0
