@@ -1,3 +1,14 @@
+import sys
+import os
+
+# Import record_performance at module load time to avoid performance degradation in hot paths
+try:
+    from performance import record_performance
+except ImportError:
+    # Handle path when imported from a different directory (e.g. src/)
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+    from performance import record_performance
+
 class CircuitBreaker:
     """
     Implements the 'Cortacircuitos' logic as defined in Gemini 2026.
@@ -14,6 +25,12 @@ class CircuitBreaker:
     def record_failure(self):
         self.total_calls += 1
         self.failures += 1
+        if not self.is_autonomous_mode_safe():
+            # Call record_performance when failure threshold is exceeded
+            record_performance(
+                f"Tasa de fallos ({self.failure_rate:.2%}) supera el umbral de autonomía de seguridad ({self.threshold:.2%})",
+                status="fallido"
+            )
 
     @property
     def failure_rate(self):
