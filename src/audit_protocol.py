@@ -2,23 +2,28 @@ class AuditProtocol:
     """
     Implements the 'Agente verifica a agente' (Agent verifies Agent) protocol.
     Ensures tiered defense through autonomous auditing.
+    Optimized get_audit_summary from O(N) to O(1) by maintaining an inline count of verified logs.
     """
     def __init__(self):
         self.logs = []
+        self._verified_count = 0
 
     def audit(self, action_agent_id, auditor_agent_id, action_data, result):
         """
         Record an audit event where one agent verifies the work of another.
         """
+        verified = self.verify_integrity(action_data, result)
         audit_entry = {
             "action_agent": action_agent_id,
             "auditor_agent": auditor_agent_id,
             "data": action_data,
             "result": result,
-            "verified": self.verify_integrity(action_data, result)
+            "verified": verified
         }
         self.logs.append(audit_entry)
-        return audit_entry["verified"]
+        if verified:
+            self._verified_count += 1
+        return verified
 
     def verify_integrity(self, data, result):
         # Placeholder for complex verification logic
@@ -27,12 +32,15 @@ class AuditProtocol:
         return True
 
     def get_audit_summary(self):
+        """
+        Returns a summary of the audit logs.
+        Optimized to run in O(1) time rather than O(N) by using the cached _verified_count.
+        """
         total = len(self.logs)
-        verified = sum(1 for log in self.logs if log["verified"])
         return {
             "total_audits": total,
-            "verified_count": verified,
-            "integrity_score": f"{(verified/total if total > 0 else 1):.2%}"
+            "verified_count": self._verified_count,
+            "integrity_score": f"{(self._verified_count / total if total > 0 else 1.0):.2%}"
         }
 
 if __name__ == "__main__":
