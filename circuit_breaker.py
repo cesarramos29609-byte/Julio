@@ -2,6 +2,15 @@ import time
 import random
 
 class CircuitBreaker:
+    """
+    Implements a Circuit Breaker (Cortacircuitos) that reduces system autonomy/performance
+    if the failure rate exceeds the failure_threshold (default 3%).
+
+    Optimized:
+    - Introduced fast path in `record_call` when `self.failures == 0`, avoiding
+      any float division or comparisons on the hot success path.
+    - Optimized `get_status` to return early without division when `self.failures == 0`.
+    """
     def __init__(self, failure_threshold=0.03):
         self.failure_threshold = failure_threshold
         self.failures = 0
@@ -13,6 +22,10 @@ class CircuitBreaker:
         if not success:
             self.failures += 1
 
+        if self.failures == 0:
+            self.performance_factor = 1.0
+            return
+
         failure_rate = self.failures / self.total_calls
         if failure_rate > self.failure_threshold:
             print(f"ALERTA: Tasa de fallos ({failure_rate:.2%}) supera el umbral ({self.failure_threshold:.2%}).")
@@ -23,6 +36,11 @@ class CircuitBreaker:
             self.performance_factor = 1.0
 
     def get_status(self):
+        if self.failures == 0:
+            return {
+                "failure_rate": 0.0,
+                "performance_factor": self.performance_factor
+            }
         return {
             "failure_rate": self.failures / self.total_calls if self.total_calls > 0 else 0,
             "performance_factor": self.performance_factor
