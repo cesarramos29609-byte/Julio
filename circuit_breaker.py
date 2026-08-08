@@ -13,6 +13,11 @@ class CircuitBreaker:
         if not success:
             self.failures += 1
 
+        # Fast path when failures == 0 to bypass division, printing, formatting and threshold comparisons.
+        if self.failures == 0:
+            self.performance_factor = 1.0
+            return
+
         failure_rate = self.failures / self.total_calls
         if failure_rate > self.failure_threshold:
             print(f"ALERTA: Tasa de fallos ({failure_rate:.2%}) supera el umbral ({self.failure_threshold:.2%}).")
@@ -23,6 +28,12 @@ class CircuitBreaker:
             self.performance_factor = 1.0
 
     def get_status(self):
+        # Fast path when failures == 0 to bypass division
+        if self.failures == 0:
+            return {
+                "failure_rate": 0.0,
+                "performance_factor": self.performance_factor
+            }
         return {
             "failure_rate": self.failures / self.total_calls if self.total_calls > 0 else 0,
             "performance_factor": self.performance_factor
