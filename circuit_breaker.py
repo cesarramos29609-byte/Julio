@@ -12,6 +12,10 @@ class CircuitBreaker:
         self.total_calls += 1
         if not success:
             self.failures += 1
+        # Optimization: fast path when there are no failures (bypasses float division and comparison)
+        elif self.failures == 0:
+            self.performance_factor = 1.0
+            return
 
         failure_rate = self.failures / self.total_calls
         if failure_rate > self.failure_threshold:
@@ -23,6 +27,12 @@ class CircuitBreaker:
             self.performance_factor = 1.0
 
     def get_status(self):
+        # Optimization: fast path when there are no failures (bypasses float division)
+        if self.failures == 0:
+            return {
+                "failure_rate": 0.0,
+                "performance_factor": self.performance_factor
+            }
         return {
             "failure_rate": self.failures / self.total_calls if self.total_calls > 0 else 0,
             "performance_factor": self.performance_factor
