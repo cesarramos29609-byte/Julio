@@ -17,6 +17,9 @@ class CircuitBreaker:
 
     @property
     def failure_rate(self):
+        # Fast path if no failures have occurred
+        if self.failures == 0:
+            return 0.0
         if self.total_calls == 0:
             return 0.0
         return self.failures / self.total_calls
@@ -26,9 +29,20 @@ class CircuitBreaker:
         Checks if it's safe to operate in full autonomous mode.
         Returns False if the failure rate is above the threshold.
         """
+        # Fast path: If failures are zero, failure rate is 0.0, which is always safe (<= threshold)
+        if self.failures == 0:
+            return True
         return self.failure_rate <= self.threshold
 
     def get_status(self):
+        # Fast path if no failures have occurred to avoid float operations and string formatting
+        if self.failures == 0:
+            return {
+                "total_calls": self.total_calls,
+                "failures": 0,
+                "failure_rate": "0.00%",
+                "autonomous_safe": True
+            }
         return {
             "total_calls": self.total_calls,
             "failures": self.failures,
