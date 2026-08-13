@@ -17,6 +17,9 @@ class CircuitBreaker:
 
     @property
     def failure_rate(self):
+        # Optimize to avoid float division when failures are 0
+        if self.failures == 0:
+            return 0.0
         if self.total_calls == 0:
             return 0.0
         return self.failures / self.total_calls
@@ -26,14 +29,20 @@ class CircuitBreaker:
         Checks if it's safe to operate in full autonomous mode.
         Returns False if the failure rate is above the threshold.
         """
+        # Optimize: if there are no failures, autonomous mode is always safe
+        if self.failures == 0:
+            return True
         return self.failure_rate <= self.threshold
 
     def get_status(self):
+        # Optimize: avoid float division, f-string formatting, and property lookup when there are zero failures while keeping code DRY
+        failures = self.failures
+        rate_str, safe = ("0.00%", True) if failures == 0 else (f"{self.failure_rate:.2%}", self.is_autonomous_mode_safe())
         return {
             "total_calls": self.total_calls,
-            "failures": self.failures,
-            "failure_rate": f"{self.failure_rate:.2%}",
-            "autonomous_safe": self.is_autonomous_mode_safe()
+            "failures": failures,
+            "failure_rate": rate_str,
+            "autonomous_safe": safe
         }
 
 if __name__ == "__main__":

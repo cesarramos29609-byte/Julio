@@ -9,9 +9,13 @@ class CircuitBreaker:
         self.performance_factor = 1.0
 
     def record_call(self, success):
+        # Optimize performance on the hot success path by skipping calculations when there are zero failures.
         self.total_calls += 1
         if not success:
             self.failures += 1
+        elif self.failures == 0:
+            # Fast-path early return for success calls under perfect state (no failures)
+            return
 
         failure_rate = self.failures / self.total_calls
         if failure_rate > self.failure_threshold:
@@ -23,8 +27,10 @@ class CircuitBreaker:
             self.performance_factor = 1.0
 
     def get_status(self):
+        # Optimize to avoid float division when there are zero failures while keeping code DRY
+        rate = 0.0 if self.failures == 0 else (self.failures / self.total_calls if self.total_calls > 0 else 0.0)
         return {
-            "failure_rate": self.failures / self.total_calls if self.total_calls > 0 else 0,
+            "failure_rate": rate,
             "performance_factor": self.performance_factor
         }
 
