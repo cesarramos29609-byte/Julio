@@ -2,6 +2,12 @@ import time
 import random
 
 class CircuitBreaker:
+    """
+    Implements a cumulative-rate state machine circuit breaker.
+    Optimized:
+    - Added fast path when self.failures == 0 in record_call and get_status.
+    - Bypasses float division and comparisons on the hot success path.
+    """
     def __init__(self, failure_threshold=0.03):
         self.failure_threshold = failure_threshold
         self.failures = 0
@@ -12,6 +18,11 @@ class CircuitBreaker:
         self.total_calls += 1
         if not success:
             self.failures += 1
+        elif self.failures == 0:
+            # Optimization: If successful call and overall failures are 0,
+            # we can early return immediately to avoid float division and checks.
+            self.performance_factor = 1.0
+            return
 
         failure_rate = self.failures / self.total_calls
         if failure_rate > self.failure_threshold:
@@ -23,6 +34,12 @@ class CircuitBreaker:
             self.performance_factor = 1.0
 
     def get_status(self):
+        # Optimization: Avoid float division when self.failures == 0
+        if self.failures == 0:
+            return {
+                "failure_rate": 0.0,
+                "performance_factor": self.performance_factor
+            }
         return {
             "failure_rate": self.failures / self.total_calls if self.total_calls > 0 else 0,
             "performance_factor": self.performance_factor
