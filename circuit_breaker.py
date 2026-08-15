@@ -10,6 +10,12 @@ class CircuitBreaker:
 
     def record_call(self, success):
         self.total_calls += 1
+        # Fast path: when a call succeeds and zero failures have occurred,
+        # skip expensive float division and threshold comparisons.
+        if success and self.failures == 0:
+            self.performance_factor = 1.0
+            return
+
         if not success:
             self.failures += 1
 
@@ -23,8 +29,9 @@ class CircuitBreaker:
             self.performance_factor = 1.0
 
     def get_status(self):
+        # Fast path: bypass float division when no failures have occurred
         return {
-            "failure_rate": self.failures / self.total_calls if self.total_calls > 0 else 0,
+            "failure_rate": 0.0 if self.failures == 0 else self.failures / self.total_calls,
             "performance_factor": self.performance_factor
         }
 
