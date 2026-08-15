@@ -13,6 +13,11 @@ class CircuitBreaker:
         if not success:
             self.failures += 1
 
+        # Bolt Optimization: Fast-path short-circuit when zero failures exist.
+        # Bypasses float division, comparison, and state assignment on hot success path.
+        if self.failures == 0:
+            return
+
         failure_rate = self.failures / self.total_calls
         if failure_rate > self.failure_threshold:
             print(f"ALERTA: Tasa de fallos ({failure_rate:.2%}) supera el umbral ({self.failure_threshold:.2%}).")
@@ -24,7 +29,8 @@ class CircuitBreaker:
 
     def get_status(self):
         return {
-            "failure_rate": self.failures / self.total_calls if self.total_calls > 0 else 0,
+            # Bolt Optimization: Avoid float division when failures == 0
+            "failure_rate": 0.0 if self.failures == 0 else (self.failures / self.total_calls if self.total_calls > 0 else 0),
             "performance_factor": self.performance_factor
         }
 
