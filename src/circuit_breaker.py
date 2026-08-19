@@ -26,6 +26,10 @@ class CircuitBreaker:
         Checks if it's safe to operate in full autonomous mode.
         Returns False if the failure rate is above the threshold.
         """
+        # Fast path: when zero failures have occurred, autonomous mode is safe.
+        # Bypasses property lookup and floating point division.
+        if self.failures == 0:
+            return self.threshold >= 0.0
         return self.failure_rate <= self.threshold
 
     def get_status(self):
