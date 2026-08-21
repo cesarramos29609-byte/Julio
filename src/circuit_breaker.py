@@ -17,7 +17,8 @@ class CircuitBreaker:
 
     @property
     def failure_rate(self):
-        if self.total_calls == 0:
+        # Fast path when zero failures have occurred to avoid unnecessary float division
+        if self.failures == 0 or self.total_calls == 0:
             return 0.0
         return self.failures / self.total_calls
 
