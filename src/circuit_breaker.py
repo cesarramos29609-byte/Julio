@@ -17,7 +17,7 @@ class CircuitBreaker:
 
     @property
     def failure_rate(self):
-        if self.total_calls == 0:
+        if self.failures == 0 or self.total_calls == 0:
             return 0.0
         return self.failures / self.total_calls
 
@@ -25,7 +25,10 @@ class CircuitBreaker:
         """
         Checks if it's safe to operate in full autonomous mode.
         Returns False if the failure rate is above the threshold.
+        Optimized: Short-circuits when zero failures exist to bypass division and property lookup.
         """
+        if self.failures == 0:
+            return self.threshold >= 0.0
         return self.failure_rate <= self.threshold
 
     def get_status(self):
