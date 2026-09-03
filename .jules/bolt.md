@@ -7,3 +7,7 @@
 ## 2026-06-25 - Audit Protocol O(1) Optimization
 **Learning:** Checking or verifying logs incrementally during status/state updates using internal tracking avoids O(N) list-iteration lookups (like sum generators) on frequent calls, converting O(N) tasks into O(1) operations.
 **Action:** Always maintain incremental running statistics or counters within state tracker instances instead of iterating over historical records to generate summaries.
+
+## 2026-09-03 - CircuitBreaker Zero-Failure Fast Path Optimization
+**Learning:** In state machines tracking cumulative failure rates, operations on failure-free paths repeat redundant float divisions and threshold comparisons. Short-circuiting with `elif self.failures == 0: return` when cumulative failures are zero bypasses arithmetic overhead safely.
+**Action:** Always short-circuit zero-failure branches in cumulative rate trackers before performing floating-point division and threshold evaluations.
