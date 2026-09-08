@@ -29,10 +29,10 @@ def _close_log_handle():
 def record_performance(action, status="exitoso"):
     """
     Records performance metrics with GPA-K963 protocol compliance.
-    Optimized with a persistent file handle, thread-safe timestamp caching (double-checked locking), and sys.stdout.write.
-    This optimization reduced latency from ~6.8µs to ~4.6µs (~32% improvement).
+    Optimized with inline persistent handle retrieval (_log_handle or _get_log_handle()),
+    thread-safe timestamp caching (double-checked locking), and sys.stdout.write.
     """
-    global _last_time_float, _last_timestamp
+    global _last_time_float, _last_timestamp, _log_handle
 
     # Use time.time() // 1 (which aligns with system second boundaries) for high performance checks
     current_time = time.time() // 1
@@ -56,10 +56,12 @@ def record_performance(action, status="exitoso"):
     )
 
     try:
-        handle = _get_log_handle()
+        # Bypassing _get_log_handle() function call overhead when _log_handle is already open
+        handle = _log_handle or _get_log_handle()
         handle.write(message)
     except Exception as e:
-        # Fallback if persistent handle fails
+        # Reset broken handle so subsequent calls can attempt to reopen
+        _log_handle = None
         sys.stdout.write(f"Error escribiendo al log persistente: {e}\n")
         with open(LOG_FILE, "a", encoding='utf-8') as f:
             f.write(message)
