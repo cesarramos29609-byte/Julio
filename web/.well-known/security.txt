@@ -1,0 +1,9 @@
+# ====================================================================
+# iOGeminis SECURITY POLICY (RFC 9116)
+# ====================================================================
+Contact: mailto:soporte@iogeminis.app
+Contact: mailto:juliometlife34@gmail.com
+Preferred-Languages: es, en
+Expires: 2027-07-01T00:00:00.000Z
+Policy: https://mx.iogeminis.app/legal.html
+Environment-Verification-ID: iOGeminis-MerchantVerification-5849536886
