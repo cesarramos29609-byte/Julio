@@ -56,7 +56,8 @@ def record_performance(action, status="exitoso"):
     )
 
     try:
-        handle = _get_log_handle()
+        # Fast handle lookup bypassing function call overhead once initialized
+        handle = _log_handle or _get_log_handle()
         handle.write(message)
     except Exception as e:
         # Fallback if persistent handle fails
