@@ -7,3 +7,7 @@
 ## 2026-06-25 - Audit Protocol O(1) Optimization
 **Learning:** Checking or verifying logs incrementally during status/state updates using internal tracking avoids O(N) list-iteration lookups (like sum generators) on frequent calls, converting O(N) tasks into O(1) operations.
 **Action:** Always maintain incremental running statistics or counters within state tracker instances instead of iterating over historical records to generate summaries.
+
+## 2026-09-26 - Module Import Pre-initialization Anti-Pattern
+**Learning:** Pre-opening persistent log handles or pre-populating short-lived (e.g., 1-second TTL) timestamp caches at module import time adds unnecessary import-time side effects (creating files on import) and overhead without benefit if functions are called >1s later.
+**Action:** Keep resource allocation lazy on first call for short-lived caches or file I/O streams.
