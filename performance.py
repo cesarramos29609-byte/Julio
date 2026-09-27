@@ -32,7 +32,7 @@ def record_performance(action, status="exitoso"):
     Optimized with a persistent file handle, thread-safe timestamp caching (double-checked locking), and sys.stdout.write.
     This optimization reduced latency from ~6.8µs to ~4.6µs (~32% improvement).
     """
-    global _last_time_float, _last_timestamp
+    global _last_time_float, _last_timestamp, _log_handle
 
     # Use time.time() // 1 (which aligns with system second boundaries) for high performance checks
     current_time = time.time() // 1
@@ -56,11 +56,13 @@ def record_performance(action, status="exitoso"):
     )
 
     try:
-        handle = _get_log_handle()
+        # Avoid function call overhead on hot paths when log handle is already open
+        handle = _log_handle if _log_handle is not None else _get_log_handle()
         handle.write(message)
     except Exception as e:
-        # Fallback if persistent handle fails
+        # Fallback if persistent handle fails and reset handle for future re-initialization
         sys.stdout.write(f"Error escribiendo al log persistente: {e}\n")
+        _log_handle = None
         with open(LOG_FILE, "a", encoding='utf-8') as f:
             f.write(message)
 
