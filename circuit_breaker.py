@@ -13,6 +13,11 @@ class CircuitBreaker:
         if not success:
             self.failures += 1
 
+        # Fast-path optimization: when there are 0 cumulative failures (the common case for healthy operations),
+        # short-circuit immediately to avoid floating-point division, threshold check, and property assignment.
+        if self.failures == 0:
+            return
+
         failure_rate = self.failures / self.total_calls
         if failure_rate > self.failure_threshold:
             print(f"ALERTA: Tasa de fallos ({failure_rate:.2%}) supera el umbral ({self.failure_threshold:.2%}).")
