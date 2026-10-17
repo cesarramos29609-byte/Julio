@@ -7,3 +7,7 @@
 ## 2026-06-25 - Audit Protocol O(1) Optimization
 **Learning:** Checking or verifying logs incrementally during status/state updates using internal tracking avoids O(N) list-iteration lookups (like sum generators) on frequent calls, converting O(N) tasks into O(1) operations.
 **Action:** Always maintain incremental running statistics or counters within state tracker instances instead of iterating over historical records to generate summaries.
+
+## 2026-10-17 - Micro-optimization vs Code Safety in State Machines
+**Learning:** Bypassing threshold calculations and downstream flow control in simple state tracking classes (like `CircuitBreaker.record_call`) via early returns is a premature micro-optimization that risks breaking state transitions and lifecycle execution without solving a genuine system bottleneck.
+**Action:** Avoid micro-optimizing low-cost mathematical operations (like float division) in state machines; focus only on verified macro bottlenecks.
