@@ -2,6 +2,14 @@ import time
 import random
 
 class CircuitBreaker:
+    """
+    Cortacircuitos implementation with threshold-based performance control.
+
+    Optimized with __slots__ to eliminate per-instance __dict__ dictionary allocation,
+    reducing memory overhead and accelerating object creation.
+    """
+    __slots__ = ("failure_threshold", "failures", "total_calls", "performance_factor")
+
     def __init__(self, failure_threshold=0.03):
         self.failure_threshold = failure_threshold
         self.failures = 0
