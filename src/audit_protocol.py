@@ -4,11 +4,14 @@ class AuditProtocol:
     Ensures tiered defense through autonomous auditing.
 
     Optimized:
+    - Added __slots__ to eliminate per-instance dict overhead, reducing memory size.
     - Added an inline counter `self._verified_count` to track verified audits.
     - Updated `get_audit_summary()` to return `self._verified_count` in O(1) time
       instead of O(N) by avoiding a full list iteration.
     - Achieves >99.9% latency reduction on large audit datasets (from O(N) to O(1)).
     """
+    __slots__ = ("logs", "_verified_count")
+
     def __init__(self):
         self.logs = []
         self._verified_count = 0

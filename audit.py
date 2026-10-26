@@ -1,9 +1,11 @@
 import os
 import sys
 
+# Hoisted tuple constant to avoid list re-allocation on every call
+PILLARS = ("flow", "antigravedad", "notebooklm", "mcp")
+
 def check_pillars():
-    pillars = ["flow", "antigravedad", "notebooklm", "mcp"]
-    missing = [p for p in pillars if not os.path.isdir(p)]
+    missing = [p for p in PILLARS if not os.path.isdir(p)]
     return missing
 
 def check_manifesto():
